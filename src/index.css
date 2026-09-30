@@ -1,0 +1,164 @@
+@import 'tailwindcss';
+@import '@fontsource/anton/400.css';
+@import '@fontsource-variable/inter';
+
+/* ------------------------------------------------------------------ tokens */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0a0a0b;
+  --surface: #151517;
+  --surface-2: #1f1f23;
+  --ink: #f6f5f1;
+  --muted: #a6a6ad;
+  --line: #2e2e33;
+  --accent: #e5172c;
+  --accent-strong: #ff2e44;
+  --accent-ink: #ffffff;
+  --ok: #3ddc8f;
+  --min: #f5c542;
+  --info: #62aefc;
+  --stripe: rgba(229, 23, 44, 0.12);
+  --on-status: #0a0a0b;
+}
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f3f1ec;
+  --surface: #ffffff;
+  --surface-2: #e9e6df;
+  --ink: #0b0b0c;
+  --muted: #55555c;
+  --line: #d6d2ca;
+  --accent: #cf1027;
+  --accent-strong: #b30d21;
+  --accent-ink: #ffffff;
+  --ok: #0f7a4a;
+  --min: #946000;
+  --info: #1d62bd;
+  --stripe: rgba(207, 16, 39, 0.08);
+  --on-status: #ffffff;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-ink: var(--accent-ink);
+  --color-ok: var(--ok);
+  --color-min: var(--min);
+  --color-info: var(--info);
+  --color-on-status: var(--on-status);
+  --font-display: 'Anton', 'Impact', 'Arial Narrow', sans-serif;
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+/* ------------------------------------------------------------------ base (layered so utilities win) */
+@layer base {
+html,
+body,
+#root {
+  min-height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+:focus-visible {
+  outline: 3px solid var(--info);
+  outline-offset: 2px;
+}
+input[type='time']::-webkit-calendar-picker-indicator {
+  filter: invert(0.6);
+}
+}
+
+/* ------------------------------------------------------------------ RPG visual language */
+@utility font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+
+/* Angular panel: cut bottom-right corner */
+@utility cut {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
+}
+/* Cut top-left + bottom-right: mission card */
+@utility cut-2 {
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+}
+/* Slanted parallelogram label / button */
+@utility slant {
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+@utility safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@utility safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+@utility stripes {
+  background-image: repeating-linear-gradient(-60deg, var(--stripe) 0 10px, transparent 10px 22px);
+}
+
+/* ------------------------------------------------------------------ motion */
+@keyframes slam-in {
+  0% { transform: translateX(-40px) skewX(-12deg); opacity: 0; }
+  60% { transform: translateX(6px) skewX(-12deg); opacity: 1; }
+  100% { transform: translateX(0) skewX(-12deg); opacity: 1; }
+}
+@keyframes rise {
+  from { transform: translateY(14px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes wipe {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes stamp {
+  0% { transform: scale(1.6) rotate(-6deg); opacity: 0; }
+  70% { transform: scale(0.96) rotate(-6deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-6deg); opacity: 1; }
+}
+@keyframes pulse-ring {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 50%, transparent); }
+  50% { box-shadow: 0 0 0 8px transparent; }
+}
+.anim-slam { animation: slam-in 380ms cubic-bezier(0.2, 0.9, 0.2, 1) both; }
+.anim-rise { animation: rise 320ms ease-out both; }
+.anim-wipe { animation: wipe 420ms cubic-bezier(0.2, 0.9, 0.2, 1) both; transform-origin: left; }
+.anim-stamp { animation: stamp 360ms cubic-bezier(0.2, 0.9, 0.2, 1) both; }
+.anim-pulse { animation: pulse-ring 2.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}
+:root[data-motion='reduced'] *,
+:root[data-motion='reduced'] *::before,
+:root[data-motion='reduced'] *::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 1ms !important;
+}

@@ -1,0 +1,31 @@
+# dependencies & build
+node_modules
+dist
+dist-ssr
+coverage
+*.tsbuildinfo
+
+# env & secrets — never commit
+.env
+.env.*
+!.env.example
+*.local
+
+# supabase local state
+supabase/.temp
+supabase/.branches
+
+# personal data exports
+quest-export-*.json
+
+# logs
+logs
+*.log
+npm-debug.log*
+
+# editor / os
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.sw?
