@@ -19,7 +19,25 @@ import { newId, type QuestRepository } from './repository'
 
 /** Business operations. Pure orchestration over the repository — no UI here. */
 
-export async function ensureSeeded(repo: QuestRepository): Promise<void> {
+const seeding = new WeakMap<QuestRepository, Promise<void>>()
+
+/**
+ * Seed default categories + tags on first run. Concurrent calls share one promise,
+ * so React StrictMode's double effect (dev) can't seed twice.
+ */
+export function ensureSeeded(repo: QuestRepository): Promise<void> {
+  let p = seeding.get(repo)
+  if (!p) {
+    p = seed(repo).catch((e: unknown) => {
+      seeding.delete(repo)
+      throw e
+    })
+    seeding.set(repo, p)
+  }
+  return p
+}
+
+async function seed(repo: QuestRepository): Promise<void> {
   const existing = await repo.listCategories()
   if (existing.length) return
   const now = new Date().toISOString()

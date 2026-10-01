@@ -15,7 +15,11 @@
     <title>Quest</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Replaced by the app once JavaScript runs. If this stays visible, the script failed to load. -->
+      <p style="font-family: system-ui, sans-serif; color: #a6a6ad; padding: 24px">Loading Quest…</p>
+    </div>
+    <noscript><p style="color: #f6f5f1; padding: 24px">Quest needs JavaScript enabled.</p></noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

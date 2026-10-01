@@ -13,7 +13,10 @@ beforeEach(async () => {
 })
 
 describe('quest service', () => {
-  it('seeds five categories and tags once', async () => {
+  it('seeds five categories and tags once, even when called concurrently', async () => {
+    const fresh = new LocalRepository(memoryStore())
+    await Promise.all([ensureSeeded(fresh), ensureSeeded(fresh)])
+    expect(await fresh.listCategories()).toHaveLength(5)
     await ensureSeeded(repo)
     expect(await repo.listCategories()).toHaveLength(5)
     const tags = await repo.listTags()
